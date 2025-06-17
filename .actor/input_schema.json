@@ -3,19 +3,12 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "companyIds": {
-            "title": "Company IDs",
-            "type": "string",
-            "description": "List of company IDs to scrape.",
-            "prefill": "4821421,23852,25192",
-            "editor": "textarea"
-        },
         "idsTest": {
           "title": "Ids Test",
           "type": "array",
           "description": "Ids to test",
-          "prefill": [{ "id": "4821421" }],
-          "editor": "requestListSources"
+          "prefill": [{ "id": "4821421" }, { "id": "23852" }, { "id": "25192" }],
+          "editor": "stringList"
        }
     }
 }
