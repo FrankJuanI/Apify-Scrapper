@@ -78,13 +78,19 @@ router.addHandler('jobs', async ({ page, request, log }) => {
         const nextButton = await page.$(nextButtonSelector);
 
         if (nextButton) {
-            const firstJobHref = await page.evaluate(() => document.querySelector('.job-card-container a')?.href ?? null);
+            const firstJobHref = await page.evaluate(() => {
+                const el = document.querySelector('.job-card-container a') as HTMLAnchorElement | null;
+                return el?.href ?? null;
+            });
             log.info('Going to next page...');
             await nextButton.click();
 
             try {
                 await page.waitForFunction(
-                    href => document.querySelector('.job-card-container a')?.href !== href,
+                    (href) => {
+                        const el = document.querySelector('.job-card-container a') as HTMLAnchorElement | null;
+                        return el?.href !== href;
+                    },
                     { timeout: 10000 },
                     firstJobHref
                 );
