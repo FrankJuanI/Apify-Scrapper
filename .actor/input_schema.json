@@ -13,6 +13,19 @@
                     "url": "https://apify.com"
                 }
             ]
+        },
+        "companyIds": {
+            "title": "Company IDs",
+            "type": "array",
+            "description": "List of company IDs to scrape.",
+            "items": {
+                "type": "string"
+            },
+            "prefill": [
+                "4821421",
+                "23852",
+                "25192"
+            ]
         }
     }
 }
