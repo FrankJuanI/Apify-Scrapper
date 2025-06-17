@@ -7,9 +7,11 @@ await Actor.init();
 interface Input {
     companyIds: string[];
 }
-const {
-    companyIds
-} = (await Actor.getInput<Input>()) ?? {};
+const { companyIds } = (await Actor.getInput<Input>()) ?? {};
+
+if (!companyIds || companyIds.length === 0) {
+    throw new Error('No companyIds provided');
+}
 
 // Creamos la cola de requests
 const requestQueue = await RequestQueue.open('linkedin-company-jobs-queue');
