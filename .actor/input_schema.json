@@ -8,7 +8,7 @@
           "type": "array",
           "description": "Ids to test",
           "prefill": [4821421, 23852, 25192],
-          "editor": "textarea"
+          "editor": "json"
        }
     }
 }
