@@ -6,11 +6,10 @@
       "companyIds": {
         "title": "LinkedIn Company IDs",
         "type": "array",
-        "description": "Lista de IDs de empresas (números) que deseas scrapear.",
+        "description": "Lista de IDs de empresas (en formato string, por ejemplo: '1234567').",
         "items": {
           "type": "string"
         }
     }
-    },
-    "required": ["companyIds"]
+    }
 }
