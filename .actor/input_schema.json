@@ -1,15 +1,26 @@
 {
-    "title": "LinkedIn Company Jobs Scraper",
+    "title": "PuppeteerCrawler Template",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-      "companyIds": {
-        "title": "LinkedIn Company IDs",
-        "type": "array",
-        "description": "Lista de IDs de empresas (en formato string, por ejemplo: '1234567').",
-        "items": {
-          "type": "string"
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "URLs to start with.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://apify.com"
+                }
+            ]
+        },
+        "companyIds": {
+            "title": "Company IDs",
+            "type": "array",
+            "description": "List of company IDs to scrape.",
+            "items": {
+                "type": "string"
+            }
         }
-      }
     }
 }
