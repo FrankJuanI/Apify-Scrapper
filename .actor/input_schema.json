@@ -16,21 +16,9 @@
         },
         "companyIds": {
             "title": "Company IDs",
-            "type": "array",
+            "type": "string",
             "description": "List of company IDs to scrape.",
-            "items": {
-                "type": "string"
-            },
-            "prefill": [
-                "4821421",
-                "23852",
-                "25192"
-            ],
-            "enum": [
-                "4821421",
-                "23852",
-                "25192"
-            ]
+            "prefill": "4821421,23852,25192"
         }
     }
 }
