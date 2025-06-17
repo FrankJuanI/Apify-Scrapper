@@ -19,7 +19,7 @@
             "type": "string",
             "description": "List of company IDs to scrape.",
             "prefill": "4821421,23852,25192",
-            "editor": "string"
+            "editor": "textarea"
         }
     }
 }
