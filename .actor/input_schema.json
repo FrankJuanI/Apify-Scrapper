@@ -1,18 +1,17 @@
 {
-    "title": "PuppeteerCrawler Template",
+    "title": "LinkedIn Company Job Scraper",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "startUrls": {
-            "title": "Start URLs",
+        "companyIds": {
+            "title": "LinkedIn Company IDs",
             "type": "array",
-            "description": "URLs to start with.",
-            "editor": "requestListSources",
-            "prefill": [
-                {
-                    "url": "https://apify.com"
-                }
-            ]
+            "description": "Lista de IDs de empresa en LinkedIn (sólo los números del URL)",
+            "items": {
+                "type": "string"
+            },
+            "prefill": ["4821421", "23852", "25192"]
         }
-    }
+    },
+    "required": ["companyIds"]
 }

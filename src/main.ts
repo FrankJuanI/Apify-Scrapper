@@ -7,8 +7,9 @@ await Actor.init();
 interface Input {
     companyIds: string[];
 }
+
 const {
-    companyIds = ['4821421', '23852', '25192'],
+    companyIds = [],
 } = (await Actor.getInput<Input>()) ?? {};
 
 // Creamos la cola de requests
