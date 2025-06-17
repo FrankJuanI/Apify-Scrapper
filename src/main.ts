@@ -25,6 +25,7 @@ const proxyConfiguration = await Actor.createProxyConfiguration();
 
 // Create a PuppeteerCrawler that will use the proxy configuration and and handle requests with the router from routes.ts file.
 const crawler = new PuppeteerCrawler({
+    requestHandlerTimeoutSecs: 180,
     proxyConfiguration,
     headless: false,
     requestHandler: router,
