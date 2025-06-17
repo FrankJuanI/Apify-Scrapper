@@ -13,7 +13,9 @@ interface Input {
     companyIds: string[];
 }
 // Define the URLs to start the crawler with - get them from the input of the Actor or use a default list.
-const { companyIds = ['4821421'] } = (await Actor.getInput<Input>()) ?? {};
+const { 
+    companyIds = ['4821421', '23852', '25192'] 
+} = (await Actor.getInput<Input>()) ?? {};
 
 const startUrls = companyIds.map((id) => ({
     url: `https://www.linkedin.com/company/${id}/jobs/`,

@@ -76,13 +76,30 @@ router.addHandler('jobs', async ({ page, request, log }) => {
         allJobs.push(...jobs);
 
         const nextButtonSelector = '.jobs-search-pagination__button--next';
-        const nextButton = await page.waitForSelector(nextButtonSelector, { timeout: 5000 });
-
+        const nextButton = await page.$(nextButtonSelector);
+        
         if (nextButton) {
-            await Promise.all([
-                page.waitForNavigation({ waitUntil: 'networkidle0' }),
-                nextButton.click(),
-            ]);
+            const firstJobHref = await page.evaluate(() => {
+                const firstJob = document.querySelector('.job-card-container a');
+                return firstJob?.href ?? null;
+            });
+        
+            log.info('Pasando a la siguiente página...');
+            await nextButton.click();
+        
+            try {
+                await page.waitForFunction(
+                    (href) => {
+                        const firstJob = document.querySelector('.job-card-container a');
+                        return firstJob?.href !== href;
+                    },
+                    { timeout: 10000 },
+                    firstJobHref
+                );
+            } catch {
+                log.warning('Timeout esperando cambio de contenido tras paginación. Asumiendo fin o error.');
+                break;
+            }
         } else {
             log.info('No hay más páginas. Terminando scraping.');
             break;
