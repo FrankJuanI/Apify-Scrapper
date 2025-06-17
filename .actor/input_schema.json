@@ -10,17 +10,9 @@
             "editor": "requestListSources",
             "prefill": [
                 {
-                    "url": "https://www.linkedin.com/jobs/search?"
+                    "url": "https://apify.com"
                 }
             ]
-        },
-        "companyIds": {
-            "title": "Company IDs",
-            "type": "array",
-            "description": "List of company IDs to scrape.",
-            "items": {
-                "type": "string"
-            }
         }
     }
 }
