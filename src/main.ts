@@ -1,42 +1,44 @@
-// Apify SDK - toolkit for building Apify Actors (Read more at https://docs.apify.com/sdk/js/).
 import { Actor } from 'apify';
-// Web scraping and browser automation library (Read more at https://crawlee.dev)
-import type { Request } from 'crawlee';
-import { PuppeteerCrawler } from 'crawlee';
-
+import { PuppeteerCrawler, RequestQueue, AutoscaledPool } from 'crawlee';
 import { router } from './routes.js';
 
-// The init() call configures the Actor for its environment. It's recommended to start every Actor with an init().
 await Actor.init();
 
 interface Input {
     companyIds: string[];
 }
-// Define the URLs to start the crawler with - get them from the input of the Actor or use a default list.
-const { 
-    companyIds = ['4821421', '23852', '25192'] 
+const {
+    companyIds = ['4821421', '23852', '25192'],
 } = (await Actor.getInput<Input>()) ?? {};
 
-const startUrls = companyIds.map((id) => ({
-    url: `https://www.linkedin.com/company/${id}/jobs/`,
-    label: 'jobs',
-}));
+const requestQueue = await RequestQueue.open('linkedin-company-jobs-queue');
 
-// Create a proxy configuration that will rotate proxies from Apify Proxy.
-const proxyConfiguration = await Actor.createProxyConfiguration();
+// Encolar solo nuevos requests para evitar duplicados
+for (const id of companyIds) {
+    await requestQueue.addRequest({
+        url: `https://www.linkedin.com/company/${id}/jobs/`,
+        userData: { label: 'jobs', companyId: id },
+        uniqueKey: id, // evita duplicados en queue
+    });
+}
 
-// Create a PuppeteerCrawler that will use the proxy configuration and and handle requests with the router from routes.ts file.
+// Configuración proxy con sesiones para evitar bloqueos LinkedIn
+const proxyConfiguration = await Actor.createProxyConfiguration({
+    groups: ['SHADER', 'RESIDENTIAL']
+});
+
 const crawler = new PuppeteerCrawler({
-    requestHandlerTimeoutSecs: 180,
+    requestQueue,
     proxyConfiguration,
-    headless: false,
-    requestHandler: router,
+    maxRequestRetries: 5,
+    sessionPoolOptions: {
+        maxPoolSize: 50, // máximo de sesiones para rotar (ajustar según tu cuenta)
+    },
+    requestHandlerTimeoutSecs: 240,
     launchContext: {
         launchOptions: {
-            args: [
-                '--disable-gpu', // Mitigates the "crashing GPU process" issue in Docker containers
-                '--no-sandbox', // Mitigates the "sandboxed" process issue in Docker containers
-            ],
+            headless: true,
+            args: ['--disable-gpu', '--no-sandbox'],
         },
     },
     preNavigationHooks: [
@@ -48,10 +50,21 @@ const crawler = new PuppeteerCrawler({
             });
         },
     ],
+    requestHandler: router,
+    failedRequestHandler: async ({ request, error, log }) => {
+        log.error(`Request ${request.url} failed after retries: ${error.message}`);
+    },
 });
 
-// Run the crawler with the start URLs and wait for it to finish.
-await crawler.run(startUrls);
+// Pool con autoescalado para controlar concurrencia según recursos
+const pool = new AutoscaledPool({
+    runTaskFunction: (request) => crawler.runTask(request),
+    maxConcurrency: 20,          // máximo absoluto concurrente (ajustar)
+    desiredConcurrency: 10,      // concurrencia objetivo inicial
+    systemStatusOptions: {
+        memoryAvailableBytes: 300 * 1024 * 1024, // 300MB mínimo memoria disponible para aumentar concurrencia
+    },
+});
 
-// Gracefully exit the Actor process. It's recommended to quit all Actors with an exit().
+await pool.run();
 await Actor.exit();
