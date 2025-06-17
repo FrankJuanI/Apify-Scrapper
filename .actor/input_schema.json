@@ -3,11 +3,11 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "idsTest": {
-          "title": "Ids Test",
+        "companyIds": {
+          "title": "Company IDs",
           "type": "array",
           "description": "Ids to test",
-          "prefill": [{ "id": "4821421" }, { "id": "23852" }, { "id": "25192" }],
+          "prefill": ["4821421", "23852", "25192"],
           "editor": "stringList"
        }
     }
