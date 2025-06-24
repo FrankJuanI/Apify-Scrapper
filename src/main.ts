@@ -21,7 +21,7 @@ for (const id of companyIds) {
     await requestQueue.addRequest({
         url: `https://www.linkedin.com/company/${id}/jobs/`,
         userData: { label: 'jobs', companyId: id },
-        uniqueKey: id,
+        uniqueKey: id.toString(),
     });
 }
 
@@ -41,7 +41,7 @@ const crawler = new PuppeteerCrawler({
         },
     },
     useSessionPool: true,
-    maxConcurrency: 5,
+    maxConcurrency: 2,
     maxRequestRetries: 2,
     requestHandlerTimeoutSecs: 240,
     launchContext: {
@@ -49,7 +49,9 @@ const crawler = new PuppeteerCrawler({
             headless: true,
             args: ['--disable-gpu', '--no-sandbox'],
         },
+        useChrome: true
     },
+    persistCookiesPerSession: true,
     preNavigationHooks: [
         async ({ page }) => {
             await page.setCookie({
