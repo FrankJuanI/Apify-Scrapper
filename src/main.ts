@@ -27,7 +27,7 @@ for (const id of companyIds) {
 
 // Configuración de proxy
 const proxyConfiguration = await Actor.createProxyConfiguration({
-    groups: ['SHADER', 'RESIDENTIAL'],
+    groups: ['RESIDENTIAL'],
 });
 
 // Crawler configurado
