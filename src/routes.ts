@@ -3,15 +3,8 @@ import { createPuppeteerRouter, Dataset } from 'crawlee';
 
 export const router = createPuppeteerRouter();
 
-router.addDefaultHandler(async ({ enqueueLinks, log }) => {
-    log.info(`Enqueueing URLs from links...`);
-    await enqueueLinks({
-        globs: ['https://www.linkedin.com/jobs/search/*'],
-        label: 'jobs',
-    });
-});
 
-router.addHandler('jobs', async ({ page, request, log }) => {
+router.addDefaultHandler(async ({ page, request, log }) => {
     log.info(`Scraping jobs for companyId: ${request.userData.companyId}`);
 
     await page.evaluate(() => window.scrollBy(0, 500));
