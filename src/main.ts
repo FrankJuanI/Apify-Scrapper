@@ -41,7 +41,7 @@ const crawler = new PuppeteerCrawler({
         },
     },
     useSessionPool: true,
-    maxConcurrency: 2,
+    maxConcurrency: 1,
     maxRequestRetries: 2,
     requestHandlerTimeoutSecs: 240,
     launchContext: {
@@ -56,9 +56,14 @@ const crawler = new PuppeteerCrawler({
         async ({ page }) => {
             await page.setCookie({
                 name: 'li_at',
-                value: 'AQEDAUMp89QFwYJEAAABkVYU_PMAAAGXodDYnlYAK96UO9Ho4lsqk_q8btWWBulxVPMALuRnB39cfJHmB9odxU26fdYAE9ZQatpLyPxHOfFeFw_gZ-XHe4ZUYO-wVr-NdsRnA2nZkYqe9k5auzuNVvRK',
+                value: 'AQEDAVwjFs8EwJcBAAABl6iceiMAAAGXzKj-I00AfIMRUdgCohAv9kJQH4vGSGTiHsQ-DYZfk70gzRCzGZkRROrm9QzqoJbzrLYpYfOfxHu6R6x2ay4vUPgzNFM7SDIXZ3muJKmiIhxUt1Fnq5VKR263',
                 domain: '.linkedin.com',
             });
+        },
+    ],
+    postNavigationHooks: [
+        async () => {
+          await new Promise(res => setTimeout(res, 5000 + Math.random() * 3000));
         },
     ],
     requestHandler: router,
